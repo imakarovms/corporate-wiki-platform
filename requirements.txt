@@ -3,3 +3,6 @@ Django==5.0.6
 python-decouple==3.8
 psycopg2-binary==2.9.9
 django-allauth==0.61.1
+pytest==8.3.3
+pytest-django==4.8.0
+factory-boy==3.3.0
