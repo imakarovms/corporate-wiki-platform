@@ -18,14 +18,19 @@ from django.contrib import admin
 from django.urls import path, include
 from users.views import InviteOnlySignupView, ProfileView
 from wiki_platform.views import HomeView
+from django.conf import settings
+from django.conf.urls.static import static
 
-
-
+# ← ОПРЕДЕЛИ urlpatterns ЗДЕСЬ
 urlpatterns = [
-    path('profile/', ProfileView.as_view(), name='profile'),
     path('', HomeView.as_view(), name='home'),
-    path('accounts/profile/', ProfileView.as_view(), name='profile'),
+    path('profile/', ProfileView.as_view(), name = 'profile'),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('signup/<uuid:token>/', InviteOnlySignupView.as_view(), name='invite_signup'),
+    path('wiki/', include('wiki.urls', namespace='wiki')),
 ]
+
+# ← ТОЛЬКО ПОСЛЕ ЭТОГО добавляй static
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

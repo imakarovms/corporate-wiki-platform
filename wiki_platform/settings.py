@@ -31,6 +31,9 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,15 +41,28 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
-]
+    'django.contrib.sites',  # ← Обязательно для allauth
 
-INSTALLED_APPS += [
-    'django.contrib.sites',
-    'allauth',
+    'allauth',               # ← Только один раз
     'allauth.account',
     'allauth.socialaccount',
+
+    'users',
+    'wiki',
+    'mptt',
+    'ckeditor',
 ]
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+    },
+}
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
 
 SITE_ID = 1
 
@@ -143,7 +159,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'  
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

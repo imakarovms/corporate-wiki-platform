@@ -1,0 +1,66 @@
+from django.db import models
+
+# Create your models here.
+from django.db import models
+from django.contrib.auth import get_user_model
+from mptt.models import MPTTModel, TreeForeignKey
+from django.urls import reverse
+from ckeditor.fields import RichTextField
+
+User = get_user_model()
+
+class Category(MPTTModel):
+    name = models.CharField(max_length=100, unique=True, verbose_name="Название")
+    slug = models.SlugField(max_length=100, unique=True, verbose_name="URL")
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name="Родительская категория")
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True, verbose_name="Название")
+    slug = models.SlugField(max_length=50, unique=True, verbose_name="URL")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Тег"
+        verbose_name_plural = "Теги"
+
+class Article(models.Model):
+    STATUS_CHOICES = (
+        ('DRAFT', 'Черновик'),
+        ('PENDING', 'На модерации'),
+        ('PUBLISHED', 'Опубликовано'),
+        ('REJECTED', 'Отклонено'),
+    )
+
+    title = models.CharField(max_length=200, verbose_name="Заголовок")
+    slug = models.SlugField(max_length=200, unique=True, verbose_name="URL")
+    content = RichTextField(verbose_name="Содержание")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория")
+    tags = models.ManyToManyField(Tag, blank=True, verbose_name="Теги")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT', verbose_name="Статус")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создано")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлено")
+    file = models.FileField(upload_to='articles/', blank=True, null=True, verbose_name="Файл")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('wiki:article_detail', kwargs={'slug': self.slug})
+
+    class Meta:
+        verbose_name = "Статья"
+        verbose_name_plural = "Статьи"
+        ordering = ['-created_at']

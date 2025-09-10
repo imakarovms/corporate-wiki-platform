@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Статьи</h1>
+  {% if user.is_authenticated %}
+    <a href="{% url 'wiki:article_create' %}">+ Создать статью</a>
+  {% endif %}
+  <hr>
+  {% for article in articles %}
+    <article>
+      <h2><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
+      <p><small>Категория: {{ article.category }} | Автор: {{ article.author.email }}</small></p>
+      <p>{{ article.content|truncatewords:30 }}</p>
+      {% if article.file %}
+        <p><a href="{{ article.file.url }}">Скачать файл</a></p>
+      {% endif %}
+      <hr>
+    </article>
+  {% empty %}
+    <p>Нет опубликованных статей.</p>
+  {% endfor %}
+{% endblock %}

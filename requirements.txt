@@ -6,3 +6,5 @@ django-allauth==0.61.1
 pytest==8.3.3
 pytest-django==4.8.0
 factory-boy==3.3.0
+django-mptt==0.16.0
+django-ckeditor==6.7.2

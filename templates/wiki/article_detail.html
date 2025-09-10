@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ article.title }}</h1>
+  <p><small>Категория: {{ article.category }} | Автор: {{ article.author.email }} | Опубликовано: {{ article.created_at }}</small></p>
+  <div>{{ article.content|safe }}</div>
+  {% if article.file %}
+    <p><a href="{{ article.file.url }}">Скачать файл: {{ article.file.name }}</a></p>
+  {% endif %}
+  <hr>
+  {% if user == article.author %}
+    <a href="{% url 'wiki:article_edit' article.slug %}">Редактировать</a> |
+  {% endif %}
+  <a href="{% url 'wiki:article_list' %}">Назад к списку</a>
+{% endblock %}
