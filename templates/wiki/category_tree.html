@@ -1,0 +1,12 @@
+<ul>
+    {% for category in categories %}
+        <li>
+            <a href="{% url 'wiki:article_list_by_category' category.slug %}">{{ category.name }}</a>
+            {% if category.get_children %}
+                {% with categories=category.get_children %}
+                    {% include 'wiki/category_tree.html' %}
+                {% endwith %}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

@@ -2,9 +2,20 @@
 
 {% block content %}
   <h1>Добро пожаловать в Wiki-платформу!</h1>
+  <h2>Последние статьи</h2>
+  {% for article in latest_articles %}
+    <article>
+      <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+      <p><small>Категория: {{ article.category }} | Автор: {{ article.author.email }}</small></p>
+      <p>{{ article.content|truncatewords:20 }}</p>
+      <hr>
+    </article>
+  {% empty %}
+    <p>Еще нет опубликованных статей.</p>
+  {% endfor %}
   {% if user.is_authenticated %}
-    <p>Привет, {{ user.username }}! <a href="{% url 'account_logout' %}">Выйти</a></p>
+    <p><a href="{% url 'wiki:article_list' %}">Все статьи</a></p>
   {% else %}
-    <p><a href="{% url 'account_login' %}">Войти</a> или <a href="{% url 'account_signup' %}">Зарегистрироваться</a></p>
+    <p><a href="{% url 'account_login' %}">Войдите</a>, чтобы увидеть все статьи.</p>
   {% endif %}
 {% endblock %}

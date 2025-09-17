@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-
 {% block content %}
+  {% include 'wiki/breadcrumbs.html' %}
   <h1>{{ article.title }}</h1>
   <p><small>Категория: {{ article.category }} | Автор: {{ article.author.email }} | Опубликовано: {{ article.created_at }}</small></p>
   <div>{{ article.content|safe }}</div>
@@ -12,4 +12,41 @@
     <a href="{% url 'wiki:article_edit' article.slug %}">Редактировать</a> |
   {% endif %}
   <a href="{% url 'wiki:article_list' %}">Назад к списку</a>
+  {% if user.is_authenticated %}
+    <form id="bookmark-form" method="post" action="{% url 'wiki:bookmark_toggle' article.slug %}" style="display:inline;">
+      {% csrf_token %}
+      <button type="submit" id="bookmark-btn" style="background:none; border:none; cursor:pointer;">
+        {% if user in article.bookmarked_by.all %}
+          ⭐ Удалить из закладок
+        {% else %}
+          ⭐ Добавить в закладки
+        {% endif %}
+      </button>
+    </form>
+  {% endif %}
+
+  {% block extra_js %}
+  <script>
+  document.getElementById('bookmark-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      fetch(this.action, {
+          method: 'POST',
+          headers: {
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+              'Accept': 'application/json',
+          },
+      })
+      .then(response => response.json())
+      .then(data => {
+          const btn = document.getElementById('bookmark-btn');
+          if (data.is_bookmarked) {
+              btn.textContent = '⭐ Удалить из закладок';
+          } else {
+              btn.textContent = '⭐ Добавить в закладки';
+          }
+      });
+  });
+  </script>
+  {% endblock %}
+
 {% endblock %}
