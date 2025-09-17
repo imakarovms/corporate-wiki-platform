@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="row">
+    <!-- Боковое меню с категориями -->
+    <div class="col-md-3 mb-4">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h5>Категории</h5>
+        </div>
+        <div class="card-body">
+          {% with categories=categories %}
+            {% include 'wiki/components/category_tree.html' %}
+          {% endwith %}
+        </div>
+      </div>
+      
+      {% if user.is_authenticated %}
+      <div class="mt-4">
+        <a href="{% url 'wiki:article_create' %}" class="btn btn-primary w-100">
+          + Создать статью
+        </a>
+      </div>
+      {% endif %}
+    </div>
+    
+    <!-- Список статей -->
+    <div class="col-md-9">
+      <h1 class="mb-4">Статьи</h1>
+      
+      <div id="search-results">
+        {% include 'wiki/article_list_partial.html' %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

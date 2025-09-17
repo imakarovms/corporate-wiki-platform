@@ -1,10 +1,10 @@
-# requirements.txt
-Django==5.0.6
+asgiref==3.9.1
+Django==4.2.16
+django-ckeditor-5==0.2.18
+django-htmx==1.24.1
+pillow==11.3.0
+sqlparse==0.5.3
 python-decouple==3.8
+django-allauth==0.62.0
+django-mptt==0.14.0
 psycopg2-binary==2.9.9
-django-allauth==0.61.1
-pytest==8.3.3
-pytest-django==4.8.0
-factory-boy==3.3.0
-django-mptt==0.16.0
-django-ckeditor==6.7.2

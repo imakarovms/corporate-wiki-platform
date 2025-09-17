@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from mptt.models import MPTTModel, TreeForeignKey
 from django.urls import reverse
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 
 User = get_user_model()
 
@@ -47,7 +47,7 @@ class Article(models.Model):
 
     title = models.CharField(max_length=200, verbose_name="Заголовок")
     slug = models.SlugField(max_length=200, unique=True, verbose_name="URL")
-    content = RichTextField(verbose_name="Содержание")
+    content = CKEditor5Field('content', config_name='Содержание')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория")
     tags = models.ManyToManyField(Tag, blank=True, verbose_name="Теги")

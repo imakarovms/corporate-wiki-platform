@@ -1,0 +1,34 @@
+/* Основные стили */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.article-card {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.breadcrumb {
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+/* Стили для HTMX индикатора загрузки */
+.htmx-indicator {
+    display: none;
+    vertical-align: middle;
+}
+
+.htmx-request .htmx-indicator {
+    display: inline;
+}
+
+/* Стили для закладок */
+.bookmark-btn.active {
+    color: #ffc107;
+}

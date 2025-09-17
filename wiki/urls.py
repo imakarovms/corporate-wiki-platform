@@ -4,6 +4,9 @@ from . import views
 app_name = 'wiki'
 
 urlpatterns = [
+        # API маршруты для HTMX
+    path('api/bookmark/toggle/<slug:slug>/', views.BookmarkToggleView.as_view(), name='api_bookmark_toggle'),
+    
     path('', views.ArticleListView.as_view(), name='article_list'),
     path('search/', views.ArticleSearchView.as_view(), name='article_search'),
     path('category/<slug:slug>/', views.ArticleListByCategoryView.as_view(), name='article_list_by_category'),

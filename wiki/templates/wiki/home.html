@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h1 class="display-4">Добро пожаловать в Wiki-платформу</h1>
+    <p class="lead">Это корпоративная платформа для хранения и обмена знаниями.</p>
+    <hr class="my-4">
+    <p>Начните с просмотра статей или создайте свою собственную.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'wiki:article_list' %}" role="button">Просмотреть статьи</a>
+  </div>
+{% endblock %}
