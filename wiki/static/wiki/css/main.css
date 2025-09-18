@@ -32,3 +32,38 @@ body {
 .bookmark-btn.active {
     color: #ffc107;
 }
+
+/* Стили для дерева категорий */
+.category-tree {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.category-tree li {
+    position: relative;
+}
+
+.category-tree li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 0;
+    width: 1px;
+    background-color: #ddd;
+}
+
+.category-tree li:last-child::before {
+    height: 12px;
+}
+
+.category-item {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.category-item:hover {
+    background-color: #f8f9fa;
+}

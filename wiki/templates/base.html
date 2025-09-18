@@ -1,6 +1,6 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
-    {% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -77,6 +77,33 @@
     <script src="https://unpkg.com/htmx.org@1.9.6"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="{% static 'wiki/js/main.js' %}"></script>
+    
+    <!-- Обработка дерева категорий -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Обработка дерева категорий
+        function setupCategoryTree() {
+            const categoryItems = document.querySelectorAll('.category-item');
+            
+            categoryItems.forEach(item => {
+                const level = parseInt(item.dataset.level) || 0;
+                // Умножаем на 20, чтобы получить отступ в пикселях (20px на уровень)
+                const indent = level * 20;
+                item.style.marginLeft = indent + 'px';
+            });
+        }
+        
+        // Запускаем обработку дерева категорий
+        setupCategoryTree();
+        
+        // Если используется HTMX, перезапускаем обработку после динамической загрузки
+        document.addEventListener('htmx:afterSwap', function(evt) {
+            if (evt.target.querySelector('.category-tree')) {
+                setupCategoryTree();
+            }
+        });
+    });
+    </script>
     
     {% block extra_js %}
     {% endblock %}
