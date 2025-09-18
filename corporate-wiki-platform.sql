@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict Z0SsgmSrBAsTCdp4UClLTMSjYViocBMAFdDizx19cEBwAbWtsFANt3bLmkks5fa
+\restrict Gg4sFQzl8gGdlPmHFbd8fVo710EZMnqNXWtiJLxd9vd7ZVOEOYQZVHDflvLUsKU
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14
@@ -833,6 +833,18 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 5	2025-09-17 05:51:53.482713+00	2	Аналитика	1	[{"added": {}}]	15	1
 6	2025-09-17 05:52:03.214686+00	1	КБА	1	[{"added": {}}]	14	1
 7	2025-09-17 05:52:27.380775+00	2	Аналитика	1	[{"added": {}}]	16	1
+8	2025-09-18 08:00:15.707672+00	3	тертья статья	2	[{"changed": {"fields": ["URL", "\\u0421\\u0442\\u0430\\u0442\\u0443\\u0441"]}}]	16	1
+9	2025-09-18 10:09:40.060296+00	1	КБА	2	[]	15	1
+10	2025-09-18 10:09:43.075918+00	2	Аналитика	2	[]	15	1
+11	2025-09-18 10:09:52.107473+00	3	Монита	1	[{"added": {}}]	15	1
+12	2025-09-18 10:10:03.815345+00	4	Геолокация	1	[{"added": {}}]	15	1
+13	2025-09-18 10:10:27.383143+00	5	Очереди	1	[{"added": {}}]	15	1
+14	2025-09-18 11:44:49.102742+00	6	Полки	1	[{"added": {}}]	15	1
+15	2025-09-18 11:45:58.849281+00	7	Web Monita	1	[{"added": {}}]	15	1
+16	2025-09-18 11:56:13.942628+00	8	EVA	1	[{"added": {}}]	15	1
+17	2025-09-18 11:56:28.262008+00	9	Сканер	1	[{"added": {}}]	15	1
+18	2025-09-18 11:56:39.844354+00	10	Аренда	1	[{"added": {}}]	15	1
+19	2025-09-18 11:57:05.487815+00	11	Градусник	1	[{"added": {}}]	15	1
 \.
 
 
@@ -904,6 +916,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 35	wiki	0002_alter_article_content	2025-09-17 04:26:55.644193+00
 36	wiki	0003_auto_20250910_2223	2025-09-17 04:27:11.065754+00
 37	wiki	0004_viewhistory_bookmark	2025-09-17 06:02:34.892429+00
+38	wiki	0005_alter_article_content	2025-09-17 12:50:12.056545+00
 \.
 
 
@@ -913,6 +926,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 7qenzhk6mdfplgme9w09pwtyeene8wgg	.eJxlUMtuwyAQ_Jc9WxZgGz9OVe79gqqyFlhimhgig_tQlH8vtLmkva1mZmd35gqoddh9mnFPC_nkNCYX_LxSWoKJML1c4XeGCS4Y40fYDFSACSbedwMbZDM2NZcdk31bAa3ozlnqVjzhFt7X-HQsUK3DCrfXCn4OzXukbXbFk8MDplCfyBfCvKE_hrzn0-ZUXST1nY31czB0Pty1DwYLxiVvI7WK20EZofTAWT9SflQ3g0BlVWsJlWqRWdJamM420jZaWDlqKzvBjBIl4v9myMx_g_e8zeHzC5FiLM3R58VtXzCx2zdYwnSJ:1uyka9:0RA2yJiW-rLAdzw-JBU7G4ruGc3v0_JxnAaNsnHW2F0	2025-10-01 05:19:53.172266+00
+4hinpxwkpkdl390wedzjkgpmf5da5s5n	.eJxVkM1uwyAQhN9lzxYCbAL2qcq9T1BF1vKTmCZABDhtFeXda9pcctud-WZW2jugMWmNdca1Li5Wb7D6FOfg6pJsgenjDv8zTHDFUr5SttABVpiYFIpJxRUnAxVqJztwAf1lI33AM-Z0C-Xt1CRiUoDHoYO_O_NaXJ59q2Twomk0ZxebYT8xntKWizV7TRpCnm4h78m6y_7JvhQsWJYtjccj1YKOoxDGSdsbpkapuZFcyYENdNtZLxhybpXsdyi06UdGrcbBokPTSosrpb3CfV99_oGJPn4BAfxkbg:1uz8UE:ZqU7V5bLCzrqEY-7RudVG4fNzSbygZfkGOXcals8ctk	2025-10-02 06:51:22.415941+00
 \.
 
 
@@ -962,7 +976,7 @@ COPY public.socialaccount_socialtoken (id, token, token_secret, expires_at, acco
 --
 
 COPY public.users_customuser (id, password, last_login, is_superuser, username, first_name, last_name, is_staff, is_active, date_joined, role, email) FROM stdin;
-1	pbkdf2_sha256$720000$GusxbQiDu4b1cEteh9CryR$vZkpmEPJ1XHoam9Q44/Ezb/nKIrmeQOGZpc/Bpdh1Ds=	2025-09-17 05:19:53.168513+00	t	maks			t	t	2025-09-17 04:33:56.137089+00	USER	imakarovms@gmail.com
+1	pbkdf2_sha256$600000$FASuVEkd03eSFNoH8XxLEC$gWycIg/tN6dylmaf8dS2shyjh0CiYyw9Z/5fUTrAkaU=	2025-09-18 06:51:22.413208+00	t	maks			t	t	2025-09-17 04:33:56.137089+00	USER	imakarovms@gmail.com
 \.
 
 
@@ -997,6 +1011,7 @@ COPY public.users_invitation (id, email, token, created_at, is_used) FROM stdin;
 COPY public.wiki_article (id, title, slug, content, status, created_at, updated_at, file, author_id, category_id) FROM stdin;
 1	Первая статья	pervaya-statya	<p>Тектс первой статьи</p>	PUBLISHED	2025-09-17 05:51:42.060629+00	2025-09-17 05:51:42.060641+00		1	1
 2	Аналитика	analitika	<p>Текст аналитики</p>	PUBLISHED	2025-09-17 05:52:27.376944+00	2025-09-17 05:52:27.376955+00		1	2
+3	тертья статья	tertya-statya	<p>тест статьи</p>	PUBLISHED	2025-09-18 07:59:41.478955+00	2025-09-18 08:00:15.705722+00		1	1
 \.
 
 
@@ -1021,8 +1036,17 @@ COPY public.wiki_bookmark (id, created_at, article_id, user_id) FROM stdin;
 --
 
 COPY public.wiki_category (id, name, slug, lft, rght, tree_id, level, parent_id) FROM stdin;
-1	КБА	kba	1	4	1	0	\N
-2	Аналитика	analitika	2	3	1	1	1
+8	EVA	eva	1	2	1	0	\N
+10	Аренда	arenda	1	2	2	0	\N
+5	Очереди	ocheredi	3	4	4	2	2
+1	КБА	kba	1	8	4	0	\N
+2	Аналитика	analitika	2	7	4	1	1
+6	Полки	polki	5	6	4	2	2
+3	Монита	monita	1	6	5	0	\N
+4	Геолокация	geolokaciya	4	5	5	1	3
+7	Web Monita	web-monita	2	3	5	1	3
+9	Сканер	skaner	1	2	6	0	\N
+11	Градусник	gradusnik	1	2	3	0	\N
 \.
 
 
@@ -1042,6 +1066,7 @@ COPY public.wiki_tag (id, name, slug) FROM stdin;
 COPY public.wiki_viewhistory (id, viewed_at, article_id, user_id) FROM stdin;
 1	2025-09-17 06:03:14.305247+00	1	1
 2	2025-09-17 07:16:00.849097+00	2	1
+3	2025-09-18 08:01:52.350281+00	3	1
 \.
 
 
@@ -1084,7 +1109,7 @@ SELECT pg_catalog.setval('public.auth_permission_id_seq', 72, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 7, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 19, true);
 
 
 --
@@ -1098,7 +1123,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 18, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 37, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 38, true);
 
 
 --
@@ -1168,7 +1193,7 @@ SELECT pg_catalog.setval('public.users_invitation_id_seq', 1, false);
 -- Name: wiki_article_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.wiki_article_id_seq', 2, true);
+SELECT pg_catalog.setval('public.wiki_article_id_seq', 3, true);
 
 
 --
@@ -1182,14 +1207,14 @@ SELECT pg_catalog.setval('public.wiki_article_tags_id_seq', 1, false);
 -- Name: wiki_bookmark_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.wiki_bookmark_id_seq', 3, true);
+SELECT pg_catalog.setval('public.wiki_bookmark_id_seq', 13, true);
 
 
 --
 -- Name: wiki_category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.wiki_category_id_seq', 2, true);
+SELECT pg_catalog.setval('public.wiki_category_id_seq', 11, true);
 
 
 --
@@ -1203,7 +1228,7 @@ SELECT pg_catalog.setval('public.wiki_tag_id_seq', 1, true);
 -- Name: wiki_viewhistory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.wiki_viewhistory_id_seq', 2, true);
+SELECT pg_catalog.setval('public.wiki_viewhistory_id_seq', 3, true);
 
 
 --
@@ -2065,5 +2090,5 @@ ALTER TABLE ONLY public.wiki_viewhistory
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Z0SsgmSrBAsTCdp4UClLTMSjYViocBMAFdDizx19cEBwAbWtsFANt3bLmkks5fa
+\unrestrict Gg4sFQzl8gGdlPmHFbd8fVo710EZMnqNXWtiJLxd9vd7ZVOEOYQZVHDflvLUsKU
 
