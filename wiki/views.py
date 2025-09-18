@@ -112,7 +112,9 @@ class ArticleListByCategoryView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = get_object_or_404(Category, slug=self.kwargs['slug'])
-        return context    
+        # Добавьте эту строку ↓
+        context['categories'] = Category.objects.filter(parent=None)
+        return context  
     
 class BookmarkListView(LoginRequiredMixin, ListView):
     model = Bookmark

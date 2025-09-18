@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Результаты поиска: "{{ query }}" | Wiki-платформа{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <!-- Список статей -->
+    <div class="col-md-12">
+      <h1 class="mb-4">Результаты поиска: "{{ query }}"</h1>
+      
+      {% if articles %}
+        <div id="search-results">
+          {% include 'wiki/article_list_partial.html' %}
+        </div>
+      {% else %}
+        <div class="alert alert-info">
+          Нет статей, соответствующих вашему запросу.
+        </div>
+        <a href="{% url 'wiki:article_list' %}" class="btn btn-outline-secondary">
+          ← Вернуться к списку статей
+        </a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
