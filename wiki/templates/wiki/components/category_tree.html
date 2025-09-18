@@ -1,0 +1,18 @@
+{% if categories %}
+  <ul class="list-unstyled">
+    {% for category in categories %}
+      <li class="mb-1">
+        <a href="{% url 'wiki:article_list_by_category' category.slug %}" class="text-decoration-none">
+          {{ category.name }}
+        </a>
+        {% if category.get_children %}
+          {% with categories=category.get_children %}
+            {% include 'wiki/components/category_tree.html' %}
+          {% endwith %}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="text-muted">Нет категорий.</p>
+{% endif %}

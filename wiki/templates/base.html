@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+    {% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,9 +43,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'wiki:bookmarks' %}">🔖 Закладки</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'wiki:history' %}">📚 История</a>
-                            </li>
+                            
                             <li class="nav-item">
                                 <span class="nav-link">Привет, {{ user.email }}</span>
                             </li>

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Закладки | Wiki-платформа{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="mb-4">Мои закладки</h1>
+    
+    {% if bookmarks %}
+      <div class="row">
+        {% for bookmark in bookmarks %}
+          <div class="col-md-6 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <a href="{{ bookmark.article.get_absolute_url }}">{{ bookmark.article.title }}</a>
+                </h5>
+                <p class="card-text text-muted">
+                  Категория: {{ bookmark.article.category }} | 
+                  Добавлено: {{ bookmark.created_at|date:"d.m.Y H:i" }}
+                </p>
+                
+                    <form class="delete-form" method="post" action="{% url 'wiki:bookmark_toggle' bookmark.article.slug %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-warning delete-btn">
+                        <i class="fas fa-trash"></i> Удалить
+                    </button>
+                    </form>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      <!-- Пагинация -->
+      {% if is_paginated %}
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; первая</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">предыдущая</a>
+              </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+              <span class="page-link">
+                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+              </span>
+            </li>
+
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">следующая</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+    {% else %}
+      <div class="alert alert-info">
+        У вас пока нет закладок. Перейдите к интересной статье и нажмите "Добавить в закладки".
+      </div>
+    {% endif %}
+    
+    <p><a href="{% url 'wiki:article_list' %}" class="btn btn-outline-secondary mt-3">
+      ← Вернуться к списку статей
+    </a></p>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Найди все формы удаления
+    const forms = document.querySelectorAll('.delete-form');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // ← ОТМЕНЯЕМ СТАНДАРТНУЮ ОТПРАВКУ
+            
+            const card = form.closest('.col-md-6'); // ← НАХОДИМ КАРТОЧКУ СТАТЬИ
+            
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.is_bookmarked === false) {
+                    // УДАЛЯЕМ КАРТОЧКУ СО СТРАНИЦЫ
+                    card.remove();
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Не удалось удалить закладку. Попробуйте позже.');
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

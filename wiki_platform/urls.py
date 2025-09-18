@@ -20,6 +20,7 @@ from users.views import InviteOnlySignupView, ProfileView
 from wiki_platform.views import HomeView
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 # ← ОПРЕДЕЛИ urlpatterns ЗДЕСЬ
 urlpatterns = [
@@ -29,6 +30,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('signup/<uuid:token>/', InviteOnlySignupView.as_view(), name='invite_signup'),
     path('wiki/', include('wiki.urls', namespace='wiki')),
+    path('upload/', views.UploadFileView.as_view(), name='ck_editor_5_upload_file'),
 ]
 
 # ← ТОЛЬКО ПОСЛЕ ЭТОГО добавляй static

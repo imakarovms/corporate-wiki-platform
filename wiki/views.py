@@ -1,5 +1,6 @@
 from django.shortcuts import render
-
+import os
+from django.conf import settings
 # Create your views here.
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -141,3 +142,24 @@ class ViewHistoryListView(LoginRequiredMixin, ListView):
     template_name = 'wiki/history.html'
     context_object_name = 'history'
     paginate_by = 20
+
+
+class UploadFileView(View):
+    def post(self, request):
+        if 'upload' in request.FILES:
+            file = request.FILES['upload']
+            filename = file.name
+            filepath = os.path.join(settings.MEDIA_ROOT, 'uploads', filename)
+            
+            with open(filepath, 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+            
+            url = f"{settings.MEDIA_URL}uploads/{filename}"
+            return JsonResponse({
+                'uploaded': 1,
+                'fileName': filename,
+                'url': url
+            })
+        
+        return JsonResponse({'uploaded': 0, 'error': {'message': 'Failed to upload file'}}, status=400)

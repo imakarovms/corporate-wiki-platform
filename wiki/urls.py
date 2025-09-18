@@ -19,4 +19,5 @@ urlpatterns = [
     # 👇 Потом "общие" — <slug:slug> должен быть ПОСЛЕДНИМ
     path('<slug:slug>/', views.ArticleDetailView.as_view(), name='article_detail'),
     path('<slug:slug>/edit/', views.ArticleUpdateView.as_view(), name='article_edit'),
+    path('upload/', views.UploadFileView.as_view(), name='ck_editor_5_upload_file'),
 ]
