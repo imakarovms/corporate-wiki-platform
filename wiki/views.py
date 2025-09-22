@@ -162,8 +162,16 @@ class BookmarkListView(LoginRequiredMixin, ListView):
 
 class BookmarkToggleView(LoginRequiredMixin, View):
     def post(self, request, slug):
+        print(f"=== DEBUG: BookmarkToggleView called ===")
+        print(f"Slug: {slug}")
+        print(f"User: {request.user}")
+        print(f"POST data: {dict(request.POST)}")
+        
         article = get_object_or_404(Article, slug=slug)
         source_page = request.POST.get('source_page', 'article_detail')
+        
+        print(f"Article: {article.title}")
+        print(f"Source page: {source_page}")
         
         # Проверяем существование закладки
         bookmark_exists = Bookmark.objects.filter(
@@ -171,34 +179,37 @@ class BookmarkToggleView(LoginRequiredMixin, View):
             article=article
         ).exists()
         
+        print(f"Bookmark exists before: {bookmark_exists}")
+        
         if bookmark_exists:
             # Удаляем закладку
             Bookmark.objects.filter(user=request.user, article=article).delete()
             is_bookmarked = False
+            print("DEBUG: Bookmark deleted")
         else:
             # Создаем закладку
             Bookmark.objects.create(user=request.user, article=article)
             is_bookmarked = True
+            print("DEBUG: Bookmark created")
         
-        # Обработка для разных страниц
+        print(f"Bookmark exists after: {is_bookmarked}")
+        
+        # Для страницы закладок возвращаем пустой HTML при удалении
         if source_page == 'bookmarks' and not is_bookmarked:
-            # Удаление со страницы закладок - возвращаем пустой HTML
+            print("DEBUG: Returning empty response for bookmarks page")
             return HttpResponse('')
         
-        elif source_page == 'article_list':
-            # Для списка статей
+        # Для страницы списка статей
+        if source_page == 'article_list':
+            print("DEBUG: Generating button for article list")
             if is_bookmarked:
-                button_html = '''
-                <button type="submit" class="btn btn-warning btn-sm">
-                    <i class="fas fa-bookmark"></i> Удалить из закладок
-                </button>
-                '''
+                button_text = "Удалить из закладок"
+                button_class = "btn-warning"
+                icon_class = "fas"
             else:
-                button_html = '''
-                <button type="submit" class="btn btn-outline-warning btn-sm">
-                    <i class="far fa-bookmark"></i> Добавить в закладки
-                </button>
-                '''
+                button_text = "Добавить в закладки"
+                button_class = "btn-outline-warning"
+                icon_class = "far"
             
             html = f'''
             <form method="post" 
@@ -209,39 +220,43 @@ class BookmarkToggleView(LoginRequiredMixin, View):
                   class="d-inline">
                 <input type="hidden" name="csrfmiddlewaretoken" value="{get_token(request)}">
                 <input type="hidden" name="source_page" value="article_list">
-                {button_html}
+                <button type="submit" class="btn {button_class} btn-sm">
+                    <i class="{icon_class} fa-bookmark"></i> {button_text}
+                </button>
             </form>
             '''
+            
+            print(f"DEBUG: HTML length: {len(html)}")
             return HttpResponse(html)
         
+        # Для детальной страницы статьи
+        print("DEBUG: Generating button for article detail")
+        if is_bookmarked:
+            button_text = "Удалить из закладок"
+            button_class = "btn-warning"
+            icon_class = "fas"
         else:
-            # Для детальной страницы статьи
-            if is_bookmarked:
-                button_html = '''
-                <button type="submit" class="btn btn-warning btn-sm">
-                    <i class="fas fa-bookmark"></i> Удалить из закладок
-                </button>
-                '''
-            else:
-                button_html = '''
-                <button type="submit" class="btn btn-outline-warning btn-sm">
-                    <i class="far fa-bookmark"></i> Добавить в закладки
-                </button>
-                '''
-            
-            html = f'''
-            <form method="post" 
-                  action="{reverse('wiki:bookmark_toggle', args=[article.slug])}" 
-                  hx-post="{reverse('wiki:bookmark_toggle', args=[article.slug])}"
-                  hx-target="this"
-                  hx-swap="outerHTML"
-                  class="d-inline">
-                <input type="hidden" name="csrfmiddlewaretoken" value="{get_token(request)}">
-                <input type="hidden" name="source_page" value="article_detail">
-                {button_html}
-            </form>
-            '''
-            return HttpResponse(html)
+            button_text = "Добавить в закладки"
+            button_class = "btn-outline-warning"
+            icon_class = "far"
+        
+        html = f'''
+        <form method="post" 
+              action="{reverse('wiki:bookmark_toggle', args=[article.slug])}" 
+              hx-post="{reverse('wiki:bookmark_toggle', args=[article.slug])}"
+              hx-target="this"
+              hx-swap="outerHTML"
+              class="d-inline">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{get_token(request)}">
+            <input type="hidden" name="source_page" value="article_detail">
+            <button type="submit" class="btn {button_class} btn-sm">
+                <i class="{icon_class} fa-bookmark"></i> {button_text}
+            </button>
+        </form>
+        '''
+        
+        print(f"DEBUG: HTML length: {len(html)}")
+        return HttpResponse(html)
 
 class ViewHistoryListView(LoginRequiredMixin, ListView):
     model = ViewHistory
