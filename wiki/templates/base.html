@@ -40,27 +40,32 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'wiki:article_list' %}">Статьи</a>
                         </li>
-                        {% if user.is_authenticated %}
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'wiki:bookmarks' %}">🔖 Закладки</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <span class="nav-link">Привет, {{ user.email }}</span>
+                        </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'wiki:bookmarks' %}">🔖 Закладки</a>
+                                <form method="post" action="{% url 'account_logout' %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="nav-link logout-btn">
+                                        Выйти
+                                    </button>
+                                </form>
                             </li>
-                            
-                            <li class="nav-item">
-                                <span class="nav-link">Привет, {{ user.email }}</span>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'account_logout' %}">Выйти</a>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'account_login' %}">Войти</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'account_login' %}">Войти</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
+</header>
 {% endblock %}
 
     <main class="container mt-4">

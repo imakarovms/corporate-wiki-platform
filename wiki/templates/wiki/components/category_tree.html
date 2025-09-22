@@ -1,25 +1,14 @@
-{% if categories %}
-  <ul class="category-tree">
-    {% for category in categories %}
-      <li>
-        {% if category.get_children.exists %}
-          <span class="toggle-icon"></span>
-        {% endif %}
-        <span class="category-item {% if request.resolver_match.kwargs.slug == category.slug %}active-category{% endif %}" data-level="{{ category.level }}" data-slug="{{ category.slug }}">
-          <a href="{% url 'wiki:article_list_by_category' category.slug %}" class="text-decoration-none">
-            {{ category.name }}
-          </a>
-        </span>
-        {% if category.get_children %}
-          <ul class="children-list">
-            {% with categories=category.get_children %}
-              {% include 'wiki/components/category_tree.html' %}
-            {% endwith %}
-          </ul>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p class="text-muted">Нет категорий.</p>
-{% endif %}
+<li class="category-item">
+    <a href="{% url 'wiki:article_list_by_category' category.slug %}" 
+       class="text-decoration-none {% if category == current_category %}active-category{% endif %}">
+        <i class="fas fa-folder me-1"></i>{{ category.name }}
+    </a>
+    
+    {% if category.children.all %}
+    <ul class="category-children">
+        {% for child in category.children.all %}
+            {% include "wiki/components/category_tree.html" with category=child %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+</li>

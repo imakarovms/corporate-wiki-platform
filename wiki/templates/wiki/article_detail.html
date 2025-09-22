@@ -59,77 +59,44 @@
     {% endif %}
 
     <!-- Закладки -->
-    {% if user.is_authenticated %}
-      <form id="bookmark-form" method="post" action="{% url 'wiki:bookmark_toggle' article.slug %}" class="d-inline">
-        {% csrf_token %}
-        <button type="submit" id="bookmark-btn" class="btn {% if user in article.bookmarked_by.all %}btn-warning active{% else %}btn-outline-warning{% endif %}">
-          <i class="fas fa-bookmark"></i> 
-          {% if user in article.bookmarked_by.all %}Удалить из закладок{% else %}Добавить в закладки{% endif %}
-        </button>
-      </form>
-    {% endif %}
+    <span id="bookmark-button-{{ article.slug }}">
+      {% if user.is_authenticated %}
+        {% if is_bookmarked %}
+        <form method="post" 
+              action="{% url 'wiki:bookmark_toggle' article.slug %}" 
+              hx-post="{% url 'wiki:bookmark_toggle' article.slug %}"
+              hx-target="#bookmark-button-{{ article.slug }}"
+              hx-swap="outerHTML"
+              class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="source_page" value="article_detail">
+            <button type="submit" class="btn btn-warning btn-sm">
+                <i class="fas fa-bookmark"></i> Удалить из закладок
+            </button>
+        </form>
+        {% else %}
+        <form method="post" 
+              action="{% url 'wiki:bookmark_toggle' article.slug %}" 
+              hx-post="{% url 'wiki:bookmark_toggle' article.slug %}"
+              hx-target="#bookmark-button-{{ article.slug }}"
+              hx-swap="outerHTML"
+              class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="source_page" value="article_detail">
+            <button type="submit" class="btn btn-outline-warning btn-sm">
+                <i class="far fa-bookmark"></i> Добавить в закладки
+            </button>
+        </form>
+        {% endif %}
+      {% else %}
+        <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-outline-warning btn-sm">
+            <i class="far fa-bookmark"></i> Добавить в закладки
+        </a>
+      {% endif %}
+    </span>
 
     <a href="{% url 'wiki:article_list' %}" class="btn btn-outline-secondary">
       ← Назад к списку
     </a>
   </div>
-
-  <!-- История просмотров -->
-  {% if user.is_authenticated %}
-    <div class="mt-4">
-      <h5>История просмотров</h5>
-      <ul class="list-group">
-        {% for record in view_history %}
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              <strong>{{ record.user.email }}</strong>
-              <br>
-              <small>Просмотрено: {{ record.viewed_at|date:"d.m.Y H:i" }}</small>
-            </div>
-          </li>
-        {% empty %}
-          <li class="list-group-item">Пока никто не просматривал эту статью.</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-{% endblock %}
-
-{% block extra_js %}
-  <script>
-    // Обработка закладок через AJAX
-    document.getElementById('bookmark-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const form = this;
-      const btn = document.getElementById('bookmark-btn');
-      
-      fetch(form.action, {
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({})
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.is_bookmarked !== undefined) {
-          if (data.is_bookmarked) {
-            btn.classList.add('btn-warning', 'active');
-            btn.classList.remove('btn-outline-warning');
-            btn.innerHTML = '<i class="fas fa-bookmark"></i> Удалить из закладок';
-          } else {
-            btn.classList.remove('btn-warning', 'active');
-            btn.classList.add('btn-outline-warning');
-            btn.innerHTML = '<i class="fas fa-bookmark"></i> Добавить в закладки';
-          }
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка:', error);
-        alert('Не удалось обновить закладку. Попробуйте позже.');
-      });
-    });
-  </script>
 {% endblock %}

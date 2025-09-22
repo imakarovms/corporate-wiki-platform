@@ -1,0 +1,73 @@
+{% extends "account/base_auth.html" %}
+{% load i18n %}
+{% load account %}
+
+{% block title %}Вход в Wiki-платформу{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h2 class="card-title fw-bold text-primary">Добро пожаловать</h2>
+                        <p class="text-muted">Войдите в свою учетную запись</p>
+                    </div>
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Неверный email или пароль.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endif %}
+
+                    <form method="POST" action="{% url 'account_login' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_login" class="form-label fw-semibold">Email</label>
+                            <input type="email" name="login" class="form-control form-control-lg" 
+                                   id="id_login" placeholder="ваш@email.com" required 
+                                   value="{{ form.login.value|default:'' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label fw-semibold">Пароль</label>
+                            <input type="password" name="password" class="form-control form-control-lg" 
+                                   id="id_password" placeholder="Введите пароль" required>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" name="remember" class="form-check-input" id="id_remember">
+                            <label class="form-check-label" for="id_remember">Запомнить меня</label>
+                        </div>
+
+                        {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        {% endif %}
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 py-2 mb-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Войти
+                        </button>
+
+                        <div class="text-center mb-4">
+                            <a class="text-decoration-none" href="{% url 'account_reset_password' %}">
+                                Забыли пароль?
+                            </a>
+                        </div>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="mb-0">Еще нет аккаунта?</p>
+                        <a href="{% url 'account_signup' %}" class="btn btn-outline-primary btn-lg w-100">
+                            <i class="fas fa-user-plus me-2"></i>Зарегистрироваться
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

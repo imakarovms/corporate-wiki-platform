@@ -1,0 +1,23 @@
+{% if user.is_authenticated %}
+<form method="post" 
+      action="{% url 'wiki:bookmark_toggle' article.slug %}" 
+      hx-post="{% url 'wiki:bookmark_toggle' article.slug %}"
+      hx-target="this"
+      hx-swap="outerHTML"
+      class="d-inline">
+    {% csrf_token %}
+    {% if is_bookmarked %}
+    <button type="submit" class="btn btn-warning btn-sm">
+        <i class="fas fa-bookmark"></i> Удалить из закладок
+    </button>
+    {% else %}
+    <button type="submit" class="btn btn-outline-warning btn-sm">
+        <i class="far fa-bookmark"></i> Добавить в закладки
+    </button>
+    {% endif %}
+</form>
+{% else %}
+<a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-outline-warning btn-sm">
+    <i class="far fa-bookmark"></i> Добавить в закладки
+</a>
+{% endif %}
