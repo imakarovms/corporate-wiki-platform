@@ -24,6 +24,19 @@ class ArticleListView(ListView):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.filter(parent=None)
         
+        # Добавляем content_html для каждой статьи в списке
+        for article in context['articles']:
+            article.content_html = markdown2.markdown(
+                article.content,
+                extras=[
+                    "fenced-code-blocks",
+                    "tables",
+                    "strike",
+                    "task_list",
+                    "code-friendly"
+                ]
+            )
+
         # Добавляем информацию о закладках для каждой статьи
         if self.request.user.is_authenticated:
             # Получаем ID статей, которые находятся в закладках у пользователя

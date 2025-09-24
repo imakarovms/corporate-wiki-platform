@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://portal.krasnoe-beloe.ru/contact_center/dialog_list/
+HostUrl=https://portal.krasnoe-beloe.ru/bitrix/services/main/ajax.php?action=disk.api.file.download&SITE_ID=s1&humanRE=1&fileId=799234&width=1280&height=1280&signature=bd58864b608c1090164c65a2db7ce29648da896df3ac2216647e93f445a3dd30&exact=N&fileName=file_72779.jpg
