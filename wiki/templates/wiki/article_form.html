@@ -5,7 +5,13 @@
   <div class="row justify-content-center">
     <div class="col-md-10">
       <h1 class="mb-4">{% if object %}Редактировать статью{% else %}Создать статью{% endif %}</h1>
-      
+          
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         

@@ -45,41 +45,42 @@ class ArticleDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         article = self.get_object()
-        
-        # Преобразуем Markdown в HTML с поддержкой дополнительных функций
+
+        # 1. Рендеринг Markdown → HTML
         article.content_html = markdown2.markdown(
             article.content,
             extras=[
-                "fenced-code-blocks",  # Поддержка блоков кода ```
-                "tables",              # Поддержка таблиц
-                "strike",              # Поддержка ~~зачеркнутого~~ текста
-                "task_list",           # Поддержка списков задач - [x]
-                "code-friendly",       # Не обрабатывает подчеркивания внутри слов
+                "fenced-code-blocks",
+                "tables",
+                "strike",
+                "task_list",
+                "code-friendly",
             ]
         )
-        context['article'] = article
-        return context    
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        article = self.get_object()
 
-        # Проверяем, добавлена ли статья в закладки
+        # 2. Проверка закладок
         is_bookmarked = False
         if self.request.user.is_authenticated:
             is_bookmarked = Bookmark.objects.filter(
-                user=self.request.user, 
+                user=self.request.user,
                 article=article
             ).exists()
-        
         context['is_bookmarked'] = is_bookmarked
+
+        # 3. Хлебные крошки
         context['breadcrumbs'] = [
             {'name': 'Главная', 'url': reverse('home')},
-            {'name': article.category.name, 'url': reverse('wiki:article_list_by_category', kwargs={'slug': article.category.slug})},
+            {
+                'name': article.category.name,
+                'url': reverse('wiki:article_list_by_category', kwargs={'slug': article.category.slug})
+            },
             {'name': article.title, 'url': ''},
         ]
+
+        # 4. Передаём обновлённый объект статьи (с content_html)
+        context['article'] = article
         return context
-    
+
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
         if request.user.is_authenticated:
@@ -97,15 +98,26 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.status = 'PENDING'
+        form.instance.status = 'PUBLISHED'
         return super().form_valid(form)
 
+# wiki/views.py
 class ArticleUpdateView(LoginRequiredMixin, UpdateView):
     model = Article
     form_class = ArticleForm
     template_name = 'wiki/article_form.html'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
+
+    def form_valid(self, form):
+        # Сохраняем статью как черновик или отправляем на модерацию
+        if self.request.user.is_staff or self.request.user.role == 'MODERATOR':
+            # Модератор может публиковать напрямую
+            pass
+        else:
+            # Обычный пользователь — отправляет на модерацию
+            form.instance.status = 'PENDING'
+        return super().form_valid(form)
 
     def get_success_url(self):
         return self.object.get_absolute_url()

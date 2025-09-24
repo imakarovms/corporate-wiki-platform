@@ -4,7 +4,7 @@ from .models import Article
 class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['title', 'category', 'tags', 'content', 'file', 'status']
+        fields = ['title', 'category', 'content', 'file']
         widgets = {
             'content': forms.Textarea(attrs={
                 'class': 'form-control',

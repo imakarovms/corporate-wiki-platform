@@ -12,9 +12,13 @@
     <link rel="stylesheet" href="{% static 'wiki/css/main.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <link rel="stylesheet" href="{% static 'wiki/css/article.css' %}">
-    <!-- Стили CKEditor 5 -->
-    <link rel="stylesheet" href="{% static 'django_ckeditor_5/ckeditor5.css' %}">
+    <!-- GLightbox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+
 </head>
+
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
 <body>
     {% block header %}
     <header>
@@ -86,7 +90,7 @@
     <script src="https://unpkg.com/htmx.org@1.9.6"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="{% static 'wiki/js/main.js' %}"></script>
-    
+
     <!-- Обработка дерева категорий -->
     <script>
                 // УДАЛИТЬ ЭТОТ КОД
@@ -114,18 +118,8 @@
         });
     </script>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Инициализируем GLightbox для всех ссылок с классом 'glightbox'
-        const lightbox = GLightbox({
-            selector: '.glightbox',
-            touchNavigation: true,
-            loop: true,
-            width: '90vw', // Ширина модального окна
-            height: '90vh', // Высота модального окна
-        });
-    });
-    </script>
+
+
 
     {% block extra_js %}
     {% endblock %}
