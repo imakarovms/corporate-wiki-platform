@@ -1,11 +1,14 @@
 from django import forms
-from django_ckeditor_5.widgets import CKEditor5Widget
 from .models import Article
 
 class ArticleForm(forms.ModelForm):
-    content = forms.CharField(widget=CKEditor5Widget(config_name='default'))
-
     class Meta:
         model = Article
-        fields = ['title', 'content', 'category', 'tags', 'file']
-        
+        fields = ['title', 'category', 'tags', 'content', 'file', 'status']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 15,
+                'placeholder': 'Напишите статью в формате Markdown...'
+            }),
+        }

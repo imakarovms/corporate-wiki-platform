@@ -1,4 +1,3 @@
-from django.shortcuts import render
 import os
 from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, View
@@ -6,16 +5,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Article, Category, Bookmark, ViewHistory
 from django.urls import reverse_lazy, reverse
 from .forms import ArticleForm
-from django.db.models import Q
-from django.http import JsonResponse, HttpResponse  # ← ДОБАВЬТЕ HttpResponse
+from django.http import JsonResponse, HttpResponse  
 from django.contrib.postgres.search import SearchVector
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
-from django.db.models import Count, Sum
-from django.utils import timezone
-from datetime import timedelta
-from django.template.loader import render_to_string  # ← ДОБАВЬТЕ render_to_string
-from django.middleware.csrf import get_token  # ← ДОБАВЬТЕ get_token для CSRF
+from django.middleware.csrf import get_token  
+import markdown2
 
 class ArticleListView(ListView):
     model = Article
@@ -47,6 +41,24 @@ class ArticleDetailView(DetailView):
     template_name = 'wiki/article_detail.html'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        article = self.get_object()
+        
+        # Преобразуем Markdown в HTML с поддержкой дополнительных функций
+        article.content_html = markdown2.markdown(
+            article.content,
+            extras=[
+                "fenced-code-blocks",  # Поддержка блоков кода ```
+                "tables",              # Поддержка таблиц
+                "strike",              # Поддержка ~~зачеркнутого~~ текста
+                "task_list",           # Поддержка списков задач - [x]
+                "code-friendly",       # Не обрабатывает подчеркивания внутри слов
+            ]
+        )
+        context['article'] = article
+        return context    
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

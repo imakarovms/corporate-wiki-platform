@@ -36,9 +36,17 @@
   </p>
 
   <!-- Содержание статьи -->
-  <div class="article-content">
-    {{ article.content|safe }}
-  </div>
+<article class="article-content">
+    <h1>{{ article.title }}</h1>
+    <p class="text-muted">
+        Категория: {{ article.category }} |
+        Автор: {{ article.author.get_full_name|default:article.author.email }} |
+        Опубликовано: {{ article.created_at|date:"d M Y" }}
+    </p>
+    <hr>
+    <!-- Выводим преобразованный HTML -->
+    {{ article.content_html|safe }}
+</article>
 
   <!-- Файл (если есть) -->
   {% if article.file %}
@@ -99,4 +107,28 @@
       ← Назад к списку
     </a>
   </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Находим контейнер с контентом статьи
+    const articleContent = document.querySelector('.article-content');
+    if (!articleContent) return;
+
+    // Находим все изображения внутри контейнера
+    const images = articleContent.querySelectorAll('img');
+    images.forEach(img => {
+        // Создаем ссылку
+        const link = document.createElement('a');
+        link.href = img.src; // Ссылка ведет на полный размер изображения
+        link.className = 'glightbox'; // Класс для GLightbox
+        link.setAttribute('data-gallery', 'article-gallery'); // Для создания галереи из всех изображений статьи
+
+        // Оборачиваем изображение в ссылку
+        img.parentNode.insertBefore(link, img);
+        link.appendChild(img);
+    });
+});
+</script>
 {% endblock %}
