@@ -10,6 +10,7 @@ from django.contrib.postgres.search import SearchVector
 from django.shortcuts import get_object_or_404
 from django.middleware.csrf import get_token  
 import markdown2
+from django.db.models import Q
 
 class ArticleListView(ListView):
     model = Article
@@ -114,7 +115,6 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         form.instance.status = 'PUBLISHED'
         return super().form_valid(form)
 
-# wiki/views.py
 class ArticleUpdateView(LoginRequiredMixin, UpdateView):
     model = Article
     form_class = ArticleForm
@@ -135,7 +135,6 @@ class ArticleUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return self.object.get_absolute_url()
     
-
 class ArticleSearchView(ListView):
     model = Article
     template_name = 'wiki/article_search.html'
@@ -146,10 +145,9 @@ class ArticleSearchView(ListView):
         query = self.request.GET.get('q')
         if query:
             return Article.objects.filter(
+                Q(title__icontains=query) | Q(content__icontains=query),
                 status='PUBLISHED'
-            ).annotate(
-                search=SearchVector('title', 'content')
-            ).filter(search=query)
+            ).order_by('-created_at')
         return Article.objects.none()
 
     def get_context_data(self, **kwargs):

@@ -5,7 +5,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from mptt.models import MPTTModel, TreeForeignKey
 from django.urls import reverse
-
+from django.utils.text import slugify
+from transliterate import translit
 
 User = get_user_model()
 
@@ -46,7 +47,7 @@ class Article(models.Model):
     )
 
     title = models.CharField(max_length=200, verbose_name="Заголовок")
-    slug = models.SlugField(max_length=200, unique=True, verbose_name="URL")
+    slug = models.SlugField(max_length=200, unique=True, blank=True, verbose_name="URL")
     content = models.TextField(verbose_name="Содержание")
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория")
@@ -58,6 +59,18 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            title_latin = translit(self.title, 'ru', reversed=True)
+            self.slug = slugify(title_latin)
+            # Обработка дубликатов
+            original_slug = self.slug
+            counter = 1
+            while Article.objects.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('wiki:article_detail', kwargs={'slug': self.slug})
