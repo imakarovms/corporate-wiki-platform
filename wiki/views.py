@@ -83,7 +83,7 @@ class ArticleDetailView(DetailView):
 
         # 3. Хлебные крошки
         context['breadcrumbs'] = [
-            {'name': 'Главная', 'url': reverse('home')},
+            {'name': 'Главная', 'url': reverse('wiki:article_list')},
             {
                 'name': article.category.name,
                 'url': reverse('wiki:article_list_by_category', kwargs={'slug': article.category.slug})
@@ -292,12 +292,6 @@ class BookmarkToggleView(LoginRequiredMixin, View):
         
         print(f"DEBUG: HTML length: {len(html)}")
         return HttpResponse(html)
-
-class ViewHistoryListView(LoginRequiredMixin, ListView):
-    model = ViewHistory
-    template_name = 'wiki/history.html'
-    context_object_name = 'history'
-    paginate_by = 20
 
 
 class UploadFileView(View):

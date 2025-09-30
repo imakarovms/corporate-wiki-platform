@@ -1,18 +1,20 @@
 from django.contrib import admin
+from .models import CustomUser
 
-# Register your models here.
-from django.contrib import admin
-from .models import Invitation
-
-@admin.register(Invitation)
-class InvitationAdmin(admin.ModelAdmin):
-    list_display = ['email', 'token', 'created_at', 'is_used']
-    list_filter = ['is_used', 'created_at']
-    search_fields = ['email']
-    readonly_fields = ['token', 'created_at']
-
-    def get_readonly_fields(self, request, obj=None):
-        if obj:
-            return self.readonly_fields + ['email']
-        return self.readonly_fields
-
+@admin.register(CustomUser)
+class CustomUserAdmin(admin.ModelAdmin):
+    list_display = ['email', 'username', 'role', 'is_staff', 'is_active']
+    list_filter = ['role', 'is_staff', 'is_active']
+    search_fields = ['email', 'username']
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal info', {'fields': ('username', 'role')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'username', 'role', 'password1', 'password2'),
+        }),
+    )
+    ordering = ['email']

@@ -1,14 +1,17 @@
 <li class="category-item">
     <a href="{% url 'wiki:article_list_by_category' category.slug %}" 
-       class="text-decoration-none {% if category == current_category %}active-category{% endif %}">
-        <i class="fas fa-folder me-1"></i>{{ category.name }}
+       class="category-link {% if category == current_category %}active-category{% endif %}">
+        <span class="category-folder-icon">
+            <i class="fas fa-folder"></i>
+        </span>
+        <span class="category-name">{{ category.name }}</span>
     </a>
-    
-    {% if category.children.all %}
-    <ul class="category-children">
-        {% for child in category.children.all %}
-            {% include "wiki/components/category_tree.html" with category=child %}
-        {% endfor %}
-    </ul>
+
+    {% if category.get_children.exists %}
+        <ul class="category-children">
+            {% for child in category.get_children.all %}
+                {% include 'wiki/components/category_tree.html' with category=child %}
+            {% endfor %}
+        </ul>
     {% endif %}
 </li>
