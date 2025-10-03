@@ -92,10 +92,3 @@ class Bookmark(models.Model):
     def __str__(self):
         return f"{self.user} → {self.article.title}"
     
-class ViewHistory(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    viewed_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-viewed_at']

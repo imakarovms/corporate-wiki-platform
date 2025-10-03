@@ -45,7 +45,7 @@
               <a class="nav-link" href="{% url 'wiki:bookmarks' %}">🔖 Закладки</a>
             </li>
             <li class="nav-item">
-              <span class="nav-link">Привет, {{ user.email }}</span>
+              <span class="nav-link">{{ user.email }}</span>
             </li>
             <li class="nav-item">
               <form method="post" action="{% url 'account_logout' %}" class="d-inline">

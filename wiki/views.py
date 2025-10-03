@@ -2,7 +2,7 @@ import os
 from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Article, Category, Bookmark, ViewHistory
+from .models import Article, Category, Bookmark
 from django.urls import reverse_lazy, reverse
 from .forms import ArticleForm
 from django.http import JsonResponse, HttpResponse  
@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from django.middleware.csrf import get_token  
 import markdown2
 from django.db.models import Q
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 class ArticleListView(ListView):
     model = Article
@@ -91,18 +92,7 @@ class ArticleDetailView(DetailView):
             {'name': article.title, 'url': ''},
         ]
 
-        # 4. Передаём обновлённый объект статьи (с content_html)
-        context['article'] = article
         return context
-
-    def get(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
-        if request.user.is_authenticated:
-            ViewHistory.objects.get_or_create(
-                user=request.user,
-                article=self.get_object()
-            )
-        return response
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
@@ -142,7 +132,7 @@ class ArticleSearchView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        query = self.request.GET.get('q')
+        query = self.request.GET.get('q', '').strip()
         if query:
             return Article.objects.filter(
                 Q(title__icontains=query) | Q(content__icontains=query),
@@ -153,7 +143,7 @@ class ArticleSearchView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('q', '')
-        return context    
+        return context
     
 class ArticleListByCategoryView(ListView):
     model = Article
@@ -193,7 +183,7 @@ class BookmarkListView(LoginRequiredMixin, ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Bookmark.objects.filter(user=self.request.user).order_by('-created_at')  # ← Добавьте ordering
+        return Bookmark.objects.filter(user=self.request.user).order_by('-created_at')  
 
 class BookmarkToggleView(LoginRequiredMixin, View):
     def post(self, request, slug):

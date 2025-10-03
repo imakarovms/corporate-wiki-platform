@@ -91,13 +91,13 @@
     font-weight: 700;
     font-size: 1.5rem;
     letter-spacing: -0.5px;
-    color: #d10b0b !important; /* Синий акцент Bootstrap */
+    color: #0d6efd !important; /* Синий акцент Bootstrap */
     text-decoration: none;
     transition: all 0.2s ease;
 }
 
 .navbar-brand:hover {
-    color: #d10b0b !important; /* Темно-синий при наведении */
+    color: #0d6efd !important; /* Темно-синий при наведении */
     transform: translateY(-1px);
     text-shadow: 0 2px 4px rgba(13, 110, 253, 0.15);
 }

@@ -10,7 +10,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h2><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
-                <p>{{ article.content|truncatechars:200 }}</p>
+                
                 <small class="text-muted">
                     Категория: {{ article.category.name }} | 
                     Автор: {{ article.author.email }} | 
