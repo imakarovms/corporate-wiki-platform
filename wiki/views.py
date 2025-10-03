@@ -92,6 +92,9 @@ class ArticleDetailView(DetailView):
             {'name': article.title, 'url': ''},
         ]
 
+        # 🔑 ОБЯЗАТЕЛЬНО: передаём обновлённый объект article в контекст
+        context['article'] = article
+
         return context
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
